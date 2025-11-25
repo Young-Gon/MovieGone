@@ -1,4 +1,24 @@
 {
   "name": "MovieGone",
-  "displayName": "MovieGone"
+  "displayName": "MovieGone",
+  "expo": {
+    "name": "MovieGone",
+    "slug": "moviegone",
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#232323",
+          "image": "./assets/splash-icon.png",
+          "dark": {
+            "image": "./assets/splash-icon-dark.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
+        }
+      ],
+      "expo-font",
+      "expo-asset"
+    ]
+  }
 }
