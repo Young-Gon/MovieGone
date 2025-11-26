@@ -1,14 +1,14 @@
-import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import { createStaticNavigation } from "@react-navigation/native";
+import { createStaticNavigation, StaticParamList, StaticScreenProps } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, View } from "react-native";
+import HomeScreen from "../screens/HomeScreen";
 
-export type RootStackParamList = {
-    Home: undefined;
-    ScreenOne: { itemId: number; otherParam: string };
-};
+type Props = StaticScreenProps<{
+    itemId: number;
+    otherParam: string;
+}>;
 
-function ScreenOne({ route }: NativeStackScreenProps<RootStackParamList, 'ScreenOne'>) {
+function ScreenOne({ route }: Props) {
     const { itemId, otherParam } = route.params;
     console.log(`itemId: ${itemId}, otherParam: ${otherParam}`);
 
@@ -28,4 +28,12 @@ const NativeStack = createNativeStackNavigator(
 export default function StackNavigation() {
     const Navigation = createStaticNavigation(NativeStack);
     return <Navigation />;
+}
+
+type RootStackParamList = StaticParamList<typeof NativeStack>;
+
+declare global {
+    namespace ReactNavigation {
+        interface RootParamList extends RootStackParamList { }
+    }
 }
