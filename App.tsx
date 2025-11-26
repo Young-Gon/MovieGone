@@ -12,8 +12,9 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
-import Tabs from './navigation/Tabs';
+import HomeScreen from './screens/HomeScreen';
 import { ThemeContext, lightColors, darkColors } from './theme/colors';
+import StackNavigation from './navigation/navigation';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,10 +49,10 @@ function AppContent() {
     }
     prepare();
   }, []);
-  
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }] }>
-      <Tabs />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StackNavigation />
     </View>
   );
 }
