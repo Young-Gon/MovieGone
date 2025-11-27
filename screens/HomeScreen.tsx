@@ -1,9 +1,9 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Movies from "./home/Movies";
-import TV from "./home/TV";
-import Search from "./home/Search";
-import React from "react";
 import IornIcons from "@expo/vector-icons/Ionicons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
+import Movies from "./home/Movies";
+import Search from "./home/Search";
+import TV from "./home/TV";
 
 const HomeScreen = createBottomTabNavigator({
   initialRouteName: "Movies",

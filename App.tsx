@@ -4,17 +4,15 @@
  *
  * @format
  */
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { useEffect, useState, useContext } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import { useContext, useEffect } from 'react';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
-import HomeScreen from './screens/HomeScreen';
-import { ThemeContext, lightColors, darkColors } from './theme/colors';
 import StackNavigation from './navigation/navigation';
+import { darkColors, lightColors, ThemeContext } from './theme/colors';
 
 SplashScreen.preventAutoHideAsync();
 

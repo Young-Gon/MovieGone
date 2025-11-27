@@ -1,7 +1,8 @@
 import { createStaticNavigation, StaticParamList, StaticScreenProps } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, View } from "react-native";
+import { Text, useColorScheme, View } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
+import { DarkTheme, DefaultTheme } from "../theme/colors";
 
 type Props = StaticScreenProps<{
     itemId: number;
@@ -26,8 +27,9 @@ const NativeStack = createNativeStackNavigator(
 );
 
 export default function StackNavigation() {
+    const theme = useColorScheme();
     const Navigation = createStaticNavigation(NativeStack);
-    return <Navigation />;
+    return <Navigation theme={theme === 'dark' ? DarkTheme : DefaultTheme} />;
 }
 
 type RootStackParamList = StaticParamList<typeof NativeStack>;

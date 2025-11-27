@@ -1,3 +1,4 @@
+import { Theme } from '@react-navigation/native';
 import React from 'react';
 
 export type Colors = {
@@ -22,6 +23,42 @@ export const lightColors: Colors = {
   text: '#000000',
   secondaryText: '#4F4F4F',
   accent: '#FF4081',
+};
+
+export const DefaultTheme: Theme = {
+  dark: false,
+  colors: {
+    primary: lightColors.primary,
+    background: lightColors.background,
+    card: 'rgb(255, 255, 255)',
+    text: lightColors.text,
+    border: 'rgb(216, 216, 216)',
+    notification: 'rgb(255, 59, 48)',
+  },
+  fonts: {
+    regular: { fontFamily: 'System', fontWeight: '400' },
+    medium: { fontFamily: 'System', fontWeight: '500' },
+    bold: { fontFamily: 'System', fontWeight: '700' },
+    heavy: { fontFamily: 'System', fontWeight: '900' },
+  },
+};
+
+export const DarkTheme: Theme = {
+  dark: true,
+  colors: {
+    primary: darkColors.primary,
+    background: darkColors.background,
+    card: 'rgb(18, 18, 18)',
+    text: darkColors.text,
+    border: 'rgb(39, 39, 41)',
+    notification: 'rgb(255, 69, 58)',
+  },
+  fonts: {
+    regular: { fontFamily: 'System', fontWeight: '400' },
+    medium: { fontFamily: 'System', fontWeight: '500' },
+    bold: { fontFamily: 'System', fontWeight: '700' },
+    heavy: { fontFamily: 'System', fontWeight: '900' },
+  },
 };
 
 export const ThemeContext = React.createContext<Colors>(darkColors);
