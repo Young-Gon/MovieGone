@@ -4,6 +4,7 @@
  *
  * @format
  */
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 import { useContext, useEffect } from 'react';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
@@ -14,6 +15,8 @@ import {
 import StackNavigation from './navigation/navigation';
 import { darkColors, lightColors, ThemeContext } from './theme/colors';
 
+const queryClient = new QueryClient()
+
 SplashScreen.preventAutoHideAsync();
 
 function App() {
@@ -21,12 +24,14 @@ function App() {
   const colors = scheme === 'dark' ? darkColors : lightColors;
 
   return (
-    <ThemeContext.Provider value={colors}>
-      <SafeAreaProvider>
-        <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
-        <AppContent />
-      </SafeAreaProvider>
-    </ThemeContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContext.Provider value={colors}>
+        <SafeAreaProvider>
+          <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
+          <AppContent />
+        </SafeAreaProvider>
+      </ThemeContext.Provider>
+    </QueryClientProvider>
   );
 }
 SplashScreen.setOptions({

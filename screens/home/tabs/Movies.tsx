@@ -41,6 +41,12 @@ export default function Movies() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [upcommingMovies, setupcommingMovies] = useState<Movie[]>([]);
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  // const nowPlaying = useQuery<Movie[]>({
+  //   queryKey: ['nowPlaying'],
+  //   queryFn: () => movieApi.getNowPlayingMovies(),
+  //   select: (data) => data.results
+  // });
+
   const [refreshing, setRefreshing] = useState(false);
   const colors = useContext(ThemeContext);
   const SWIPER_HEIGHT = Dimensions.get('window').height / 4;
