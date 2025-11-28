@@ -1,7 +1,7 @@
 import { createStaticNavigation, StaticParamList, StaticScreenProps } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, useColorScheme, View } from "react-native";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/home/HomeScreen";
 import { DarkTheme, DefaultTheme } from "../theme/colors";
 
 type Props = StaticScreenProps<{

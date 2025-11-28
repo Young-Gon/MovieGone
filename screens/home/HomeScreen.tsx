@@ -1,9 +1,9 @@
 import IornIcons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import Movies from "./home/Movies";
-import Search from "./home/Search";
-import TV from "./home/TV";
+import Movies from "./tabs/Movies";
+import Search from "./tabs/Search";
+import TV from "./tabs/TV";
 
 const HomeScreen = createBottomTabNavigator({
   initialRouteName: "Movies",
