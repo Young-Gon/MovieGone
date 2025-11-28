@@ -1,9 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, ScrollView, Text, useColorScheme, View } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
 import Swiper from "react-native-swiper";
+import Column from "../../../components/Column";
+import Row from "../../../components/Row";
 import { Movie } from "../../../model/Movie";
 import { ThemeContext } from "../../../theme/colors";
 import MovieSlide from "../component/MovieSlide";
+import Poster from "../component/Poster";
 
 const nowPlayingURL = 'https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&page=1&region=KR';
 const upCommingURL = 'https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1&region=KR';
@@ -16,42 +19,55 @@ const options = {
   }
 };
 
-function fetchData(url: string, success:(json:any)=>void, customOptions: any = options) {
-  fetch(url, customOptions)
-    .then(res => res.json())
-    .then(json => {
-      console.log(json);
-      success(json);
-    })
-    .catch(err => console.error(err));
+async function fetchData(url: string, customOptions: any = options) {
+  try {
+    return await (await fetch(url, customOptions)).json()
+  } catch (error) {
+    console.error(error);
+    return [];
+  };
 }
+
+const staticStyles = StyleSheet.create({
+  movieTitle: {
+    fontWeight: '600',
+    marginTop: 8,
+    width: 120,
+  },
+});
 
 export default function Movies() {
   const scheme = useColorScheme();
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [upcommingMovies, setupcommingMovies] = useState<Movie[]>([]);
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const colors = useContext(ThemeContext);
   const SWIPER_HEIGHT = Dimensions.get('window').height / 4;
 
+  async function getMovieAll() {
+    const [nowPlayingJson, upCommingJson, trendingJson] = await Promise.all([fetchData(nowPlayingURL), fetchData(upCommingURL), fetchData(trandingURL)])
+    setNowPlayingMovies(nowPlayingJson.results);
+    setupcommingMovies(upCommingJson.results);
+    setTrendingMovies(trendingJson.results);
+  }
+
   useEffect(() => {
-    fetchData(nowPlayingURL, (json) => {
-      setNowPlayingMovies(json.results);
-    });
-    fetchData(upCommingURL, (json) => {
-      setupcommingMovies(json.results);
-    });
-    fetchData(trandingURL, (json) => {
-      setTrendingMovies(json.results);
-    });
+    getMovieAll();
   }, []);
 
-  return <ScrollView style={{ flex: 1 }}>
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getMovieAll();
+    setRefreshing(false);
+  }, []);
+
+  return <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { onRefresh }} />} >
     <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
     <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
       {nowPlayingMovies.length === 0 ?
         <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
-      :
+        :
         <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
           {nowPlayingMovies.map((movie) => (
             <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
@@ -60,28 +76,41 @@ export default function Movies() {
       }
     </View>
     <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
-    <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
+    <View style={{ marginTop: 10 }}>
       {upcommingMovies.length === 0 ?
         <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
-      :
-        <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
+        :
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ marginTop: 10, paddingHorizontal: 20 }}>
           {upcommingMovies.map((movie) => (
-            <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
+            <Column key={movie.id} style={{ marginHorizontal: 6 }}>
+              <Poster url={movie.poster_path} style={{ height: 160 }} />
+              <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={2}>{movie.title}</Text>
+              <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date}</Text>
+            </Column>
           ))}
-        </Swiper>
+        </ScrollView>
       }
     </View>
     <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Trending Movies</Text>
-    <View style={{ height: SWIPER_HEIGHT, marginTop: 10, marginBottom: 20 }}>
-      {trendingMovies.length === 0 ?
+
+    {trendingMovies.length === 0 ?
+      <View style={{ height: SWIPER_HEIGHT, marginTop: 10, marginBottom: 20 }}>
         <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+      </View>
       :
-        <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
-          {trendingMovies.map((movie) => (
-            <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
-          ))}
-        </Swiper>
-      }
-    </View>
+      <View>
+        {trendingMovies.map((movie) => (
+          <Row key={movie.id} style={{ marginVertical: 10, marginHorizontal: 20 }}>
+            <Poster url={movie.poster_path} style={{ height: 120 }} />
+            <Column style={{ marginHorizontal: 20, marginBottom: 20 }}>
+              <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={1}>{movie.title}</Text>
+              <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date} ⭐ {movie.vote_average.toFixed(1)}</Text>
+              <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={3}>{movie.overview}</Text>
+            </Column>
+
+          </Row>
+        ))}
+      </View>
+    }
   </ScrollView>;
 }
