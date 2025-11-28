@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, useColorScheme, View } from "react-native";
 import Swiper from "react-native-swiper";
 import Column from "../../../components/Column";
 import Row from "../../../components/Row";
@@ -62,55 +62,56 @@ export default function Movies() {
     setRefreshing(false);
   }, []);
 
-  return <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { onRefresh }} />} >
-    <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
-    <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
-      {nowPlayingMovies.length === 0 ?
-        <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
-        :
-        <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
-          {nowPlayingMovies.map((movie) => (
-            <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
-          ))}
-        </Swiper>
-      }
-    </View>
-    <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
-    <View style={{ marginTop: 10 }}>
-      {upcommingMovies.length === 0 ?
-        <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
-        :
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ marginTop: 10, paddingHorizontal: 20 }}>
-          {upcommingMovies.map((movie) => (
-            <Column key={movie.id} style={{ marginHorizontal: 6 }}>
-              <Poster url={movie.poster_path} style={{ height: 160 }} />
-              <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={2}>{movie.title}</Text>
-              <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date}</Text>
-            </Column>
-          ))}
-        </ScrollView>
-      }
-    </View>
-    <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Trending Movies</Text>
-
-    {trendingMovies.length === 0 ?
-      <View style={{ height: SWIPER_HEIGHT, marginTop: 10, marginBottom: 20 }}>
-        <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+  return <FlatList
+    data={trendingMovies}
+    keyExtractor={(item) => item.id.toString()}
+    contentContainerStyle={{ paddingBottom: 20 }}
+    ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
+    ListHeaderComponent={() => (<><Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
+      <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
+        {nowPlayingMovies.length === 0 ?
+          <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+          :
+          <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
+            {nowPlayingMovies.map((movie) => (
+              <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
+            ))}
+          </Swiper>
+        }
       </View>
-      :
-      <View>
-        {trendingMovies.map((movie) => (
-          <Row key={movie.id} style={{ marginVertical: 10, marginHorizontal: 20 }}>
-            <Poster url={movie.poster_path} style={{ height: 120 }} />
-            <Column style={{ marginHorizontal: 20, marginBottom: 20 }}>
-              <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={1}>{movie.title}</Text>
-              <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date} ⭐ {movie.vote_average.toFixed(1)}</Text>
-              <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={3}>{movie.overview}</Text>
-            </Column>
-
-          </Row>
-        ))}
+      <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
+      <View style={{ marginTop: 10 }}>
+        {upcommingMovies.length === 0 ?
+          <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+          :
+          <FlatList
+            data={upcommingMovies}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 20 }}
+            ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+            renderItem={({ item: movie }) => (
+              <Column>
+                <Poster url={movie.poster_path} style={{ height: 160 }} />
+                <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={2}>{movie.title}</Text>
+                <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date}</Text>
+              </Column>
+            )}
+          />
+        }
       </View>
-    }
-  </ScrollView>;
+      <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20, marginBottom: 10 }}>Trending Movies</Text></>)}
+    renderItem={({ item: movie }) => (
+      <Row style={{ marginHorizontal: 20 }}>
+        <Poster url={movie.poster_path} style={{ height: 120 }} />
+        <Column style={{ marginHorizontal: 20 }}>
+          <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={1}>{movie.title}</Text>
+          <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date} ⭐ {movie.vote_average.toFixed(1)}</Text>
+          <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={3}>{movie.overview}</Text>
+        </Column>
+      </Row>
+    )}
+    refreshing={refreshing}
+    onRefresh={onRefresh}
+  />;
 }
