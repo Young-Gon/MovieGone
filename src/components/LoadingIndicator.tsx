@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { View, ActivityIndicator, ViewProps, StyleSheet } from "react-native";
-import colors, { ThemeContext } from "src/theme/colors";
+import { ThemeContext } from "../theme/colors";
 
 export default function LoadingIndicator({ style, ...props }: ViewProps) {
     const colors = useContext(ThemeContext);

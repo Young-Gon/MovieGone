@@ -1,9 +1,9 @@
 import { ThemeContext } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import {useContext} from "react";
 import { FlatList, Text, View } from "react-native";
-import LoadingIndicator from "src/components/LoadingIndicator";
-import { tvApi } from "src/data/api";
+import LoadingIndicator from "../../../components/LoadingIndicator";
+import { tvApi } from "../../../data/api";
 
 export default function TVs() {
   const colors = useContext(ThemeContext);
@@ -36,8 +36,4 @@ export default function TVs() {
             </View>
         )}
     />: null;
-}
-
-function useContext(ThemeContext: any) {
-    throw new Error("Function not implemented.");
 }

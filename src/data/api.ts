@@ -1,6 +1,6 @@
-import { GeneralResult } from "src/model/GeneralResult";
-import { Movie } from "src/model/Movie";
-import { TV } from "src/model/TV";
+import { GeneralResult } from "../model/GeneralResult";
+import { Movie } from "../model/Movie";
+import { TV } from "../model/TV";
 
 const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhY2UzM2QxNGEwNDJkNTRiMjRjZWZiNDdjM2E2NWZkOCIsIm5iZiI6MTc2NDIwMzIwMy40NDUsInN1YiI6IjY5Mjc5YWMzYWI1NWRhZjhkZDM3MTk0YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.gPZAgokhB0XbPs-7GvI_YJoBfhtw95F6aOitmsOdi-8";
 const BASE_URL = "https://api.themoviedb.org/3";
