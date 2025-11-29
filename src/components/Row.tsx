@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 
-function Row({ children, style, ...props }: ViewProps) {
+export default function Row({ children, style, ...props }: ViewProps) {
   return (
     <View style={[styles.container, style]} {...props}>
       {children}
@@ -15,5 +15,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-export default Row;

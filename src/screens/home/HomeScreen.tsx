@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import Movies from "./tabs/Movies";
 import Search from "./tabs/Search";
-import TV from "./tabs/TV";
+import TVs from "./tabs/TVs";
 
 const HomeScreen = createBottomTabNavigator({
   initialRouteName: "Movies",
@@ -16,7 +16,7 @@ const HomeScreen = createBottomTabNavigator({
       }
     },
     TV: {
-      screen: TV, options: {
+      screen: TVs, options: {
         title: "TV", tabBarIcon: ({ focused, color, size }) => {
           return <IornIcons name={focused ? "tv" : "tv-outline"} color={color} size={size} />
         }

@@ -9,6 +9,7 @@ import MovieSlide from "../component/MovieSlide";
 import Poster from "../component/Poster";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { movieApi } from "../../../data/api";
+import LoadingIndicator from "../../../components/LoadingIndicator";
 
 export default function Movies() {
   const scheme = useColorScheme();
@@ -16,17 +17,17 @@ export default function Movies() {
   const nowPlaying = useQuery({
     queryKey: ['movie', 'nowPlaying'],
     queryFn: () => movieApi.getNowPlayingMovies(),
-    select: (data) => data.results as Movie[]
+    select: (data) => data.results
   });
   const upComming = useQuery({
     queryKey: ['movie', 'upComming'],
     queryFn: () => movieApi.getUpcomingMovies(),
-    select: (data) => data.results  as Movie[]
+    select: (data) => data.results
   });
   const trending = useQuery({
     queryKey: ['movie', 'trending'],
     queryFn: () => movieApi.getTrendingMovies(),
-    select: (data) => data.results  as Movie[]
+    select: (data) => data.results
   });
 
 
@@ -40,7 +41,7 @@ export default function Movies() {
     setRefreshing(false);
   }, []);
 
-  return <FlatList
+  return trending.isLoading? <LoadingIndicator /> :<FlatList
     data={trending.data}
     keyExtractor={(item) => item.id.toString()}
     contentContainerStyle={{ paddingBottom: 20 }}
@@ -48,7 +49,7 @@ export default function Movies() {
     ListHeaderComponent={() => (<><Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
       <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
         {nowPlaying.isLoading ?
-          <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+          <ActivityIndicator size="large" color={colors.primary} />
           : nowPlaying.isSuccess ?
           <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
             {nowPlaying.data.map((movie) => (
@@ -61,7 +62,7 @@ export default function Movies() {
       <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
       <View style={{ marginTop: 10 }}>
         {upComming.isLoading ?
-          <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+          <ActivityIndicator size="large" color={colors.primary} />
           :
           <FlatList
             data={upComming.data}

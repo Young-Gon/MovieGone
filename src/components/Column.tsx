@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 
-function Column({ children, style, ...props }: ViewProps) {
+export default function Column({ children, style, ...props }: ViewProps) {
   return (
     <View style={[styles.container, style]} {...props}>
       {children}
@@ -15,5 +15,3 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
 });
-
-export default Column;
