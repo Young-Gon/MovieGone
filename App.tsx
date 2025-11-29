@@ -12,8 +12,8 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import StackNavigation from './navigation/navigation';
-import { darkColors, lightColors, ThemeContext } from './theme/colors';
+import StackNavigation from './src/navigation/navigation';
+import { darkColors, lightColors, ThemeContext } from './src/theme/colors';
 
 const queryClient = new QueryClient()
 

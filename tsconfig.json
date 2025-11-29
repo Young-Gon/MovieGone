@@ -3,6 +3,7 @@
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"],
   "compilerOptions": {
+    "baseUrl": "./",
     "moduleResolution": "bundler",
     "strict": true
   }

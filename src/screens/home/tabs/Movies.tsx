@@ -7,91 +7,64 @@ import { Movie } from "../../../model/Movie";
 import { ThemeContext } from "../../../theme/colors";
 import MovieSlide from "../component/MovieSlide";
 import Poster from "../component/Poster";
-
-const nowPlayingURL = 'https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&page=1&region=KR';
-const upCommingURL = 'https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1&region=KR';
-const trandingURL = 'https://api.themoviedb.org/3/trending/movie/week?language=ko-KR';
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhY2UzM2QxNGEwNDJkNTRiMjRjZWZiNDdjM2E2NWZkOCIsIm5iZiI6MTc2NDIwMzIwMy40NDUsInN1YiI6IjY5Mjc5YWMzYWI1NWRhZjhkZDM3MTk0YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.gPZAgokhB0XbPs-7GvI_YJoBfhtw95F6aOitmsOdi-8'
-  }
-};
-
-async function fetchData(url: string, customOptions: any = options) {
-  try {
-    return await (await fetch(url, customOptions)).json()
-  } catch (error) {
-    console.error(error);
-    return [];
-  };
-}
-
-const staticStyles = StyleSheet.create({
-  movieTitle: {
-    fontWeight: '600',
-    marginTop: 8,
-    width: 120,
-  },
-});
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { movieApi } from "../../../data/api";
 
 export default function Movies() {
   const scheme = useColorScheme();
-  const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
-  const [upcommingMovies, setupcommingMovies] = useState<Movie[]>([]);
-  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
-  // const nowPlaying = useQuery<Movie[]>({
-  //   queryKey: ['nowPlaying'],
-  //   queryFn: () => movieApi.getNowPlayingMovies(),
-  //   select: (data) => data.results
-  // });
+  const queryClient = useQueryClient();
+  const nowPlaying = useQuery({
+    queryKey: ['movie', 'nowPlaying'],
+    queryFn: () => movieApi.getNowPlayingMovies(),
+    select: (data) => data.results as Movie[]
+  });
+  const upComming = useQuery({
+    queryKey: ['movie', 'upComming'],
+    queryFn: () => movieApi.getUpcomingMovies(),
+    select: (data) => data.results  as Movie[]
+  });
+  const trending = useQuery({
+    queryKey: ['movie', 'trending'],
+    queryFn: () => movieApi.getTrendingMovies(),
+    select: (data) => data.results  as Movie[]
+  });
+
 
   const [refreshing, setRefreshing] = useState(false);
   const colors = useContext(ThemeContext);
   const SWIPER_HEIGHT = Dimensions.get('window').height / 4;
 
-  async function getMovieAll() {
-    const [nowPlayingJson, upCommingJson, trendingJson] = await Promise.all([fetchData(nowPlayingURL), fetchData(upCommingURL), fetchData(trandingURL)])
-    setNowPlayingMovies(nowPlayingJson.results);
-    setupcommingMovies(upCommingJson.results);
-    setTrendingMovies(trendingJson.results);
-  }
-
-  useEffect(() => {
-    getMovieAll();
-  }, []);
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    getMovieAll();
+    queryClient.refetchQueries({ queryKey: ['movie'] });
     setRefreshing(false);
   }, []);
 
   return <FlatList
-    data={trendingMovies}
+    data={trending.data}
     keyExtractor={(item) => item.id.toString()}
     contentContainerStyle={{ paddingBottom: 20 }}
     ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
     ListHeaderComponent={() => (<><Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
       <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
-        {nowPlayingMovies.length === 0 ?
+        {nowPlaying.isLoading ?
           <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
-          :
+          : nowPlaying.isSuccess ?
           <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
-            {nowPlayingMovies.map((movie) => (
+            {nowPlaying.data.map((movie) => (
               <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
             ))}
           </Swiper>
+          : null
         }
       </View>
       <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
       <View style={{ marginTop: 10 }}>
-        {upcommingMovies.length === 0 ?
+        {upComming.isLoading ?
           <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
           :
           <FlatList
-            data={upcommingMovies}
+            data={upComming.data}
             keyExtractor={(item) => item.id.toString()}
             horizontal showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 20 }}
@@ -121,3 +94,11 @@ export default function Movies() {
     onRefresh={onRefresh}
   />;
 }
+
+const staticStyles = StyleSheet.create({
+  movieTitle: {
+    fontWeight: '600',
+    marginTop: 8,
+    width: 120,
+  },
+});

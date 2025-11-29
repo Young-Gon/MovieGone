@@ -4,8 +4,8 @@ import Column from "../../../components/Column";
 import Row from "../../../components/Row";
 import { Movie } from "../../../model/Movie";
 import { Colors } from "../../../theme/colors";
-import { makeImgPath } from "../../../Utils";
 import Poster from "./Poster";
+import { makeImgPath } from "../../../Utils";
 
 
 interface MovieSlideProps extends ViewProps {
