@@ -11,6 +11,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { movieApi } from "../../../data/api";
 import LoadingIndicator from "../../../components/LoadingIndicator";
 
+import MovieItem from "../component/MediaItem";
+import commonStyles from "../styles/style";
+import SimpleMediaItem from "../component/SimpleMediaItem";
+import HorizontalScrollBlock from "../component/HorizontalScrollBlock";
+
 export default function Movies() {
   const scheme = useColorScheme();
   const queryClient = useQueryClient();
@@ -41,56 +46,52 @@ export default function Movies() {
     setRefreshing(false);
   }, []);
 
-  return trending.isLoading? <LoadingIndicator /> :<FlatList
+  return trending.isLoading ? <LoadingIndicator /> : <FlatList
     data={trending.data}
     keyExtractor={(item) => item.id.toString()}
     contentContainerStyle={{ paddingBottom: 20 }}
     ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
-    ListHeaderComponent={() => (<><Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 10 }}>Now Playing</Text>
+    ListHeaderComponent={() => (<><Text style={{ color: colors.text, ...commonStyles.title }}>Now Playing</Text>
       <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
         {nowPlaying.isLoading ?
           <ActivityIndicator size="large" color={colors.primary} />
           : nowPlaying.isSuccess ?
-          <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
-            {nowPlaying.data.map((movie) => (
-              <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
-            ))}
-          </Swiper>
-          : null
+            <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
+              {nowPlaying.data.map((movie) => (
+                <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
+              ))}
+            </Swiper>
+            : null
         }
       </View>
-      <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20 }}>Upcomming Movies</Text>
+      <Text style={{ color: colors.text, ...commonStyles.title }}>Upcomming Movies</Text>
       <View style={{ marginTop: 10 }}>
         {upComming.isLoading ?
           <ActivityIndicator size="large" color={colors.primary} />
           :
-          <FlatList
+          <HorizontalScrollBlock
             data={upComming.data}
             keyExtractor={(item) => item.id.toString()}
-            horizontal showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20 }}
-            ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
             renderItem={({ item: movie }) => (
-              <Column>
-                <Poster url={movie.poster_path} style={{ height: 160 }} />
-                <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={2}>{movie.title}</Text>
-                <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date}</Text>
-              </Column>
+              <SimpleMediaItem
+                title={movie.title}
+                subTitle={movie.release_date}
+                poster_path={movie.poster_path}
+              />
             )}
           />
         }
       </View>
-      <Text style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 20, marginBottom: 10 }}>Trending Movies</Text></>)}
-    renderItem={({ item: movie }) => (
-      <Row style={{ marginHorizontal: 20 }}>
-        <Poster url={movie.poster_path} style={{ height: 120 }} />
-        <Column style={{ marginHorizontal: 20 }}>
-          <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={1}>{movie.title}</Text>
-          <Text style={{ color: colors.secondaryText, marginTop: 4 }}>{movie.release_date} ⭐ {movie.vote_average.toFixed(1)}</Text>
-          <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={3}>{movie.overview}</Text>
-        </Column>
-      </Row>
-    )}
+      <Text style={{ color: colors.text, ...commonStyles.title, marginBottom: 10 }}>Trending Movies</Text></>)
+    }
+    renderItem={({ item: movie }) =>
+      <MovieItem
+        title={movie.title}
+        subTitle={`${movie.release_date} ⭐ ${movie.vote_average.toFixed(1)}`}
+        body={movie.overview}
+        poster_path={movie.poster_path}
+      />
+    }
     refreshing={refreshing}
     onRefresh={onRefresh}
   />;
@@ -100,6 +101,5 @@ const staticStyles = StyleSheet.create({
   movieTitle: {
     fontWeight: '600',
     marginTop: 8,
-    width: 120,
   },
 });
