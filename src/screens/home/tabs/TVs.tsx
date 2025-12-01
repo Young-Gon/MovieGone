@@ -1,16 +1,16 @@
-import { ThemeContext } from "../../../theme/colors";
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
-import { FlatList, ScrollView, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
 import LoadingIndicator from "../../../components/LoadingIndicator";
 import { tvApi } from "../../../data/api";
-import MovieItem from "../component/MediaItem";
+import { ThemeContext } from "../../../theme/colors";
 import HorizontalScrollBlock from "../component/HorizontalScrollBlock";
 import SimpleMediaItem from "../component/SimpleMediaItem";
 import commonStyles from "../styles/style";
 
 export default function TVs() {
     const colors = useContext(ThemeContext);
+    const [isLoading, setIsLoading] = useState(false)
     const airingToday = useQuery({
         queryKey: ["tv", "airingToday"],
         queryFn: () => tvApi.getAiringToday(),
@@ -26,11 +26,11 @@ export default function TVs() {
         queryFn: () => tvApi.getTrendingTVs(),
     });
 
-    if (trending.isSuccess)
-        console.log(trending.data.results[0]);
+    useEffect(() => {
+        setIsLoading(trending.isLoading || airingToday.isLoading || topRated.isLoading)
+    }, [trending, airingToday, topRated])
 
-
-    return trending.isLoading || airingToday.isLoading || topRated.isLoading ? <LoadingIndicator /> :
+    return isLoading ? <LoadingIndicator /> :
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }}>
             {trending.isSuccess ?
                 <View>
@@ -46,8 +46,8 @@ export default function TVs() {
                             />
                         )}
                     />
-                </View> : null};
-
+                </View> : null
+            }
             {airingToday.isSuccess ?
                 <View>
                     <Text style={{ color: colors.text, ...commonStyles.title, marginBottom: 10 }}>Airing Today</Text>

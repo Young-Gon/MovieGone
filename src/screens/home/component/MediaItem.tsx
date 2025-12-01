@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import Row from '../../../components/Row';
-import Poster from './Poster';
 import Column from '../../../components/Column';
+import Row from '../../../components/Row';
 import { ThemeContext } from '../../../theme/colors';
+import Poster from './Poster';
 
 interface MovieItemProps {
   title: string;
@@ -20,7 +20,7 @@ const MovieItem: React.FC<MovieItemProps> = (props) => {
       <Column style={{ marginHorizontal: 20, flex: 1 }}>
         <Text style={[staticStyles.movieTitle, { color: colors.text }]} numberOfLines={1}>{props.title}</Text>
         <Text style={{ color: colors.secondaryText, marginTop: 4 }} numberOfLines={1}>{props.subTitle}</Text>
-        <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={3}>{props.body}</Text>
+        <Text style={{ color: colors.text, marginTop: 8, width: '100%' }} numberOfLines={3}>{props.body}</Text>
       </Column>
     </Row>
   );

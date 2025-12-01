@@ -14,6 +14,7 @@ export default function Poster({ url, style, ...props }: PosterProps) {
 const styles = StyleSheet.create({
   container: {
     aspectRatio: 2 / 3,
-    borderRadius: 8
+    borderRadius: 8,
+    backgroundColor: 'gray',  
   },
 });

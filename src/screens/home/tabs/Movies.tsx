@@ -1,20 +1,16 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useContext, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, useColorScheme, View } from "react-native";
 import Swiper from "react-native-swiper";
-import Column from "../../../components/Column";
-import Row from "../../../components/Row";
-import { Movie } from "../../../model/Movie";
+import LoadingIndicator from "../../../components/LoadingIndicator";
+import { movieApi } from "../../../data/api";
 import { ThemeContext } from "../../../theme/colors";
 import MovieSlide from "../component/MovieSlide";
-import Poster from "../component/Poster";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { movieApi } from "../../../data/api";
-import LoadingIndicator from "../../../components/LoadingIndicator";
 
-import MovieItem from "../component/MediaItem";
-import commonStyles from "../styles/style";
-import SimpleMediaItem from "../component/SimpleMediaItem";
 import HorizontalScrollBlock from "../component/HorizontalScrollBlock";
+import MovieItem from "../component/MediaItem";
+import SimpleMediaItem from "../component/SimpleMediaItem";
+import commonStyles from "../styles/style";
 
 export default function Movies() {
   const scheme = useColorScheme();
