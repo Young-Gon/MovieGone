@@ -13,7 +13,7 @@ const options = {
     }
 };
 
-type MediaType = 'all' | 'movie' | 'tv' | 'person';
+export type MediaType = 'all' | 'movie' | 'tv' | 'person';
 
 function makeApiUrl(path: string, queryParams: Record<string, string | number | boolean> = {}) {
     const url = new URL(BASE_URL + path);

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, useColorScheme, View } from "react-native";
 import HomeScreen from "../screens/home/HomeScreen";
 import { DarkTheme, DefaultTheme } from "../theme/colors";
+import DetailScreen from "../screens/detail/Detail";
 
 type Props = StaticScreenProps<{
     itemId: number;
@@ -21,6 +22,7 @@ const NativeStack = createNativeStackNavigator(
         initialRouteName: "Home",
         screens: {
             Home: { screen: HomeScreen, options: { headerShown: false } },
+            Details: { screen: DetailScreen },
             ScreenOne: { screen: ScreenOne, options: { title: "Screen One" } },
         }
     }

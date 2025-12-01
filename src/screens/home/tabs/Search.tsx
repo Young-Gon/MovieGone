@@ -34,7 +34,7 @@ export default function Search() {
             case 'loading':
                 return <LoadingIndicator />;
             case 'success':
-                return <View style={{flex:1, width: '100%', alignItems: 'center' }}>
+                return <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
 
                     <View style={{
                         flexDirection: 'row',
@@ -52,13 +52,15 @@ export default function Search() {
                     {
                         movie ?
                             <FlatList
-                                style={{ flex:1, width: '100%' }}
-                                contentContainerStyle={{ paddingHorizontal:10, paddingVertical: 20}}
+                                style={{ flex: 1, width: '100%' }}
+                                contentContainerStyle={{ paddingHorizontal: 10, paddingVertical: 20 }}
                                 ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
                                 data={resultOfMovies.data?.results}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item: movie }) =>
                                     <MovieItem
+                                        id={movie.id}
+                                        media_type="movie"
                                         title={movie.title}
                                         subTitle={`${movie.release_date} ⭐ ${movie.vote_average.toFixed(1)}`}
                                         body={movie.overview}
@@ -68,13 +70,15 @@ export default function Search() {
                             />
                             :
                             <FlatList
-                                style={{ flex:1, width: '100%' }}
-                                contentContainerStyle={{ paddingHorizontal:10, paddingVertical: 20}}
+                                style={{ flex: 1, width: '100%' }}
+                                contentContainerStyle={{ paddingHorizontal: 10, paddingVertical: 20 }}
                                 ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
                                 data={resultOfTvs.data?.results}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item: tv }) =>
                                     <MovieItem
+                                        id={tv.id}
+                                        media_type="tv"
                                         title={tv.name}
                                         subTitle={`${tv.first_air_date} ⭐ ${tv.vote_average.toFixed(1)}`}
                                         body={tv.overview}

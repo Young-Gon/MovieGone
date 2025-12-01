@@ -70,6 +70,8 @@ export default function Movies() {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item: movie }) => (
               <SimpleMediaItem
+                id={movie.id}
+                media_type="movie"
                 title={movie.title}
                 subTitle={movie.release_date}
                 poster_path={movie.poster_path}
@@ -82,6 +84,8 @@ export default function Movies() {
     }
     renderItem={({ item: movie }) =>
       <MovieItem
+        id={movie.id}
+        media_type="movie"
         title={movie.title}
         subTitle={`${movie.release_date} ⭐ ${movie.vote_average.toFixed(1)}`}
         body={movie.overview}

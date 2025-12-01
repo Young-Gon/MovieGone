@@ -40,6 +40,8 @@ export default function TVs() {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item: tv }) => (
                             <SimpleMediaItem
+                                id={tv.id}
+                                media_type="tv"
                                 title={tv.name}
                                 subTitle={tv.first_air_date}
                                 poster_path={tv.poster_path}
@@ -54,11 +56,13 @@ export default function TVs() {
                     <HorizontalScrollBlock
                         data={airingToday.data.results}
                         keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item: TV }) =>
+                        renderItem={({ item: tv }) =>
                             <SimpleMediaItem
-                                title={TV.name}
-                                subTitle={TV.first_air_date}
-                                poster_path={TV.poster_path}
+                                id={tv.id}
+                                media_type="tv"
+                                title={tv.name}
+                                subTitle={tv.first_air_date}
+                                poster_path={tv.poster_path}
                             />
                         }
                     />
@@ -72,6 +76,8 @@ export default function TVs() {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item: tv }) =>
                             <SimpleMediaItem
+                                id={tv.id}
+                                media_type="tv"
                                 title={tv.name}
                                 subTitle={tv.first_air_date}
                                 poster_path={tv.poster_path}
