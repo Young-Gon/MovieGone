@@ -37,7 +37,7 @@ function getUpcomingMovies(params: { language?: string; page?: number; region?: 
     return loggedFetch(makeApiUrl('/movie/upcoming', params), { ...options, method: 'GET' }).then(res => res.json());
 }
 
-function getDetails<R>(mediaType: MediaType, id: number, params: { language?: string } = { language: 'ko-KR' }):Promise<R> {
+function getDetails<R>(mediaType: MediaType, id: number, params: { append_to_response?: string, language?: string } = { append_to_response: 'videos', language: 'ko-KR' }):Promise<R> {
     return loggedFetch(makeApiUrl(`/${mediaType}/${id}`, params), { ...options, method: 'GET' }).then(res => res.json());
 }
 

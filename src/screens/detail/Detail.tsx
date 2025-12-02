@@ -2,7 +2,7 @@ import { StaticScreenProps, useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import { useEffect } from "react";
-import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { ActivityIndicator, Dimensions, Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import Column from "../../components/Column";
 import Row from "../../components/Row";
 import { MediaType, movieApi, tvApi } from "../../data/api";
@@ -11,6 +11,7 @@ import { TVDetail } from "../../model/TVDetail";
 import { Colors, useThemedStyles } from "../../theme/colors";
 import { makeImgPath } from "../../Utils";
 import Poster from "../home/component/Poster";
+import IornIcons from "@expo/vector-icons/Ionicons";
 
 type DetailProps = {
     title: string;
@@ -49,6 +50,9 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
                 vote_average: 0,
                 vote_count: 0,
                 original_language: '',
+                videos : {
+                    results : []
+                }
             };
 
             if (params.type === 'movie') {
@@ -136,7 +140,19 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
                 </Column>
             </Row>
         </View>
-        <Text style={[style.text, { margin: 18 }]}>{data.overview}</Text>
+        <Text style={[style.text, {marginStart: 18, marginTop:18, fontSize: 24, fontWeight: '600'}]}>씨놉시스</Text>
+        <Text style={[style.text, { margin: 18, fontSize: 16 }]}>{data.overview}</Text>
+        {'videos' in data ? data.videos.results.map((video) => {
+            if (video.type === 'Trailer') {
+                return <TouchableOpacity key={video.id} style={{ flexDirection: 'row',margin: 18}} onPress={() => {
+                    const youtubeUrl = `https://www.youtube.com/watch?v=${video.key}`;
+                    Linking.openURL(youtubeUrl);
+                }}>
+                    <IornIcons name="logo-youtube" size={32}/>
+                    <Text style={[style.text, { marginStart: 8, lineHeight: 24 }]}>{video.name}</Text>
+                </TouchableOpacity>
+            }
+        }) : null}
     </ScrollView>;
 }
 

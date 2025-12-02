@@ -1,4 +1,4 @@
-import { Genre, ProductionCompany, ProductionCountry, SpokenLanguage } from "./MovieDetail";
+import { Genre, ProductionCompany, ProductionCountry, SpokenLanguage, Video } from "./MovieDetail";
 import { TV } from "./TV";
 
 interface Creator {
@@ -62,4 +62,7 @@ export interface TVDetail extends Omit<TV, 'genre_ids'> {
     status: string;
     tagline: string | null;
     type: string;
+    videos: {
+        results: Video[];
+    };
 }
