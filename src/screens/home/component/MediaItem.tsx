@@ -14,13 +14,28 @@ interface MovieItemProps {
   subTitle: string;
   body: string;
   poster_path: string;
+  backdrop_path: string;
 }
 
-const MovieItem: React.FC<MovieItemProps> = (props) => {
+const MediaItem: React.FC<MovieItemProps> = (props) => {
   const colors = useContext(ThemeContext)
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=> navigation.navigate("Details",{itemId: props.id, type: props.media_type, title: props.title})}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate(
+          "Details",
+          {
+            itemId: props.id,
+            type: props.media_type,
+            title: props.title,
+            poster_path: props.poster_path,
+            backdrop_path: props.backdrop_path,
+            overview: props.body,            
+          }
+        )
+      }
+    >
       <Row style={{ marginHorizontal: 20 }}>
         <Poster url={props.poster_path} style={{ height: 120 }} />
         <Column style={{ marginHorizontal: 20, flex: 1 }}>
@@ -40,4 +55,4 @@ const staticStyles = StyleSheet.create({
   },
 });
 
-export default MovieItem;
+export default MediaItem;

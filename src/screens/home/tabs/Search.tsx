@@ -4,7 +4,7 @@ import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "r
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingIndicator from "../../../components/LoadingIndicator";
 import { movieApi, tvApi } from "../../../data/api";
-import MovieItem from "../component/MediaItem";
+import MediaItem from "../component/MediaItem";
 
 export default function Search() {
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -58,13 +58,14 @@ export default function Search() {
                                 data={resultOfMovies.data?.results}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item: movie }) =>
-                                    <MovieItem
+                                    <MediaItem
                                         id={movie.id}
                                         media_type="movie"
                                         title={movie.title}
                                         subTitle={`${movie.release_date} ⭐ ${movie.vote_average.toFixed(1)}`}
                                         body={movie.overview}
                                         poster_path={movie.poster_path}
+                                        backdrop_path={movie.backdrop_path}
                                     />
                                 }
                             />
@@ -76,13 +77,14 @@ export default function Search() {
                                 data={resultOfTvs.data?.results}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item: tv }) =>
-                                    <MovieItem
+                                    <MediaItem
                                         id={tv.id}
                                         media_type="tv"
                                         title={tv.name}
                                         subTitle={`${tv.first_air_date} ⭐ ${tv.vote_average.toFixed(1)}`}
                                         body={tv.overview}
                                         poster_path={tv.poster_path}
+                                        backdrop_path={tv.backdrop_path}
                                     />
                                 }
                             />

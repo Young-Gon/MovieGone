@@ -12,6 +12,8 @@ interface SimpleMediaItemProps {
   title: string;
   subTitle: string;
   poster_path: string;
+  backdrop_path: string;
+  overview: string;
 }
 
 export default function SimpleMediaItem(props: SimpleMediaItemProps) {
@@ -24,7 +26,10 @@ export default function SimpleMediaItem(props: SimpleMediaItemProps) {
         {
           itemId: props.id,
           type: props.media_type,
-          title: props.title
+          title: props.title,
+          poster_path: props.poster_path,
+          backdrop_path: props.backdrop_path,
+          overview: props.overview,
         }
       )
     }

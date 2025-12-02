@@ -1,6 +1,8 @@
 import { GeneralResult } from "../model/GeneralResult";
 import { Movie } from "../model/Movie";
+import { MovieDetail } from "../model/MovieDetail";
 import { TV } from "../model/TV";
+import { TVDetail } from "../model/TVDetail";
 import { loggedFetch } from "./apiHelper";
 
 const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhY2UzM2QxNGEwNDJkNTRiMjRjZWZiNDdjM2E2NWZkOCIsIm5iZiI6MTc2NDIwMzIwMy40NDUsInN1YiI6IjY5Mjc5YWMzYWI1NWRhZjhkZDM3MTk0YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.gPZAgokhB0XbPs-7GvI_YJoBfhtw95F6aOitmsOdi-8";
@@ -13,7 +15,7 @@ const options = {
     }
 };
 
-export type MediaType = 'all' | 'movie' | 'tv' | 'person';
+export type MediaType = 'movie' | 'tv';
 
 function makeApiUrl(path: string, queryParams: Record<string, string | number | boolean> = {}) {
     const url = new URL(BASE_URL + path);
@@ -35,7 +37,7 @@ function getUpcomingMovies(params: { language?: string; page?: number; region?: 
     return loggedFetch(makeApiUrl('/movie/upcoming', params), { ...options, method: 'GET' }).then(res => res.json());
 }
 
-function getDetails(mediaType: MediaType, id: number, params: { language?: string } = { language: 'ko-KR' }) {
+function getDetails<R>(mediaType: MediaType, id: number, params: { language?: string } = { language: 'ko-KR' }):Promise<R> {
     return loggedFetch(makeApiUrl(`/${mediaType}/${id}`, params), { ...options, method: 'GET' }).then(res => res.json());
 }
 
@@ -60,7 +62,7 @@ export const movieApi = {
     getNowPlayingMovies,
     getUpcomingMovies,
     search: (query: string) => getSearch<Movie>('movie', query),
-    getMovieDetails: (id: number) => getDetails('movie', id),
+    getMovieDetails: (id: number) => getDetails<MovieDetail>('movie', id),
 };
 
 function getAiringToday(params: { language?: string; page?: number; timezone?: string } = { language: 'ko-KR', page: 1, timezone: 'KR' }): Promise<GeneralResult<TV>> {
@@ -76,5 +78,5 @@ export const tvApi = {
     getAiringToday,
     getTopRatedTVs,
     search: (query: string) => getSearch<TV>('tv', query),
-    getTVDetails: (id: number) => getDetails('tv', id)
+    getTVDetails: (id: number) => getDetails<TVDetail>('tv', id)
 };

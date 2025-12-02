@@ -17,12 +17,25 @@ interface MovieSlideProps extends ViewProps {
 
 export default function MovieSlide({ movie, scheme, colors, ...props }: MovieSlideProps) {
   const navigation = useNavigation();
-  console.log(movie);
   return (
     <View style={{ flex: 1 }} {...props}>
       <Image source={{ uri: makeImgPath(movie.backdrop_path) }} style={{ width: '100%', height: '100%', position: 'absolute' }} />
       <BlurView intensity={75} blurReductionFactor={10} experimentalBlurMethod={'dimezisBlurView'} style={StyleSheet.absoluteFill} tint={scheme === 'dark' ? 'dark' : 'light'}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("Details", { itemId: movie.id, type: 'movie', title: movie.title})}>
+        <TouchableWithoutFeedback
+          onPress={() =>
+            navigation.navigate(
+              "Details",
+              {
+                itemId: movie.id,
+                type: 'movie',
+                title: movie.title,
+                poster_path: movie.poster_path,
+                backdrop_path: movie.backdrop_path,
+                overview: movie.overview
+              }
+            )
+          }
+        >
           <Row style={{ margin: 16 }} >
             <Poster url={movie.poster_path} style={{ height: '100%' }} />
             <Column style={{ marginLeft: 16 }}>

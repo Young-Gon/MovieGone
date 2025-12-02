@@ -45,6 +45,8 @@ export default function TVs() {
                                 title={tv.name}
                                 subTitle={tv.first_air_date}
                                 poster_path={tv.poster_path}
+                                backdrop_path={tv.backdrop_path}
+                                overview={tv.overview}
                             />
                         )}
                     />
@@ -63,6 +65,8 @@ export default function TVs() {
                                 title={tv.name}
                                 subTitle={tv.first_air_date}
                                 poster_path={tv.poster_path}
+                                backdrop_path={tv.backdrop_path}
+                                overview={tv.overview}
                             />
                         }
                     />
@@ -81,6 +85,8 @@ export default function TVs() {
                                 title={tv.name}
                                 subTitle={tv.first_air_date}
                                 poster_path={tv.poster_path}
+                                backdrop_path={tv.backdrop_path}
+                                overview={tv.overview}
                             />
                         }
                     />

@@ -1,20 +1,22 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from "react-native";
 import Swiper from "react-native-swiper";
 import LoadingIndicator from "../../../components/LoadingIndicator";
 import { movieApi } from "../../../data/api";
 import { ThemeContext } from "../../../theme/colors";
 import MovieSlide from "../component/MovieSlide";
 
+import { useNavigation } from "@react-navigation/native";
 import HorizontalScrollBlock from "../component/HorizontalScrollBlock";
-import MovieItem from "../component/MediaItem";
+import MediaItem from "../component/MediaItem";
 import SimpleMediaItem from "../component/SimpleMediaItem";
 import commonStyles from "../styles/style";
 
 export default function Movies() {
   const scheme = useColorScheme();
   const queryClient = useQueryClient();
+  const navigation = useNavigation();
   const nowPlaying = useQuery({
     queryKey: ['movie', 'nowPlaying'],
     queryFn: () => movieApi.getNowPlayingMovies(),
@@ -54,7 +56,23 @@ export default function Movies() {
           : nowPlaying.isSuccess ?
             <Swiper containerStyle={{ height: SWIPER_HEIGHT }} showsPagination={false} autoplay={true} autoplayTimeout={3} >
               {nowPlaying.data.map((movie) => (
-                <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    navigation.navigate(
+                      "Details",
+                      {
+                        itemId: movie.id,
+                        type: 'movie',
+                        title: movie.title,
+                        poster_path: movie.poster_path,
+                        backdrop_path: movie.backdrop_path,
+                        overview: movie.overview
+                      }
+                    )
+                  }
+                >
+                  <MovieSlide key={movie.id} movie={movie} scheme={scheme} colors={colors} />
+                </TouchableWithoutFeedback>
               ))}
             </Swiper>
             : null
@@ -75,6 +93,8 @@ export default function Movies() {
                 title={movie.title}
                 subTitle={movie.release_date}
                 poster_path={movie.poster_path}
+                backdrop_path={movie.backdrop_path}
+                overview={movie.overview}
               />
             )}
           />
@@ -83,13 +103,14 @@ export default function Movies() {
       <Text style={{ color: colors.text, ...commonStyles.title, marginBottom: 10 }}>Trending Movies</Text></>)
     }
     renderItem={({ item: movie }) =>
-      <MovieItem
+      <MediaItem
         id={movie.id}
         media_type="movie"
         title={movie.title}
         subTitle={`${movie.release_date} ⭐ ${movie.vote_average.toFixed(1)}`}
         body={movie.overview}
         poster_path={movie.poster_path}
+        backdrop_path={movie.backdrop_path}
       />
     }
     refreshing={refreshing}

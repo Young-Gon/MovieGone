@@ -1,21 +1,9 @@
-import { createStaticNavigation, StaticParamList, StaticScreenProps } from "@react-navigation/native";
+import { createStaticNavigation, StaticParamList } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, useColorScheme, View } from "react-native";
+import { useColorScheme } from "react-native";
+import DetailScreen from "../screens/detail/Detail";
 import HomeScreen from "../screens/home/HomeScreen";
 import { DarkTheme, DefaultTheme } from "../theme/colors";
-import DetailScreen from "../screens/detail/Detail";
-
-type Props = StaticScreenProps<{
-    itemId: number;
-    otherParam: string;
-}>;
-
-function ScreenOne({ route }: Props) {
-    const { itemId, otherParam } = route.params;
-    console.log(`itemId: ${itemId}, otherParam: ${otherParam}`);
-
-    return <View><Text>Screen One</Text></View>;
-}
 
 const NativeStack = createNativeStackNavigator(
     {
@@ -23,7 +11,6 @@ const NativeStack = createNativeStackNavigator(
         screens: {
             Home: { screen: HomeScreen, options: { headerShown: false } },
             Details: { screen: DetailScreen },
-            ScreenOne: { screen: ScreenOne, options: { title: "Screen One" } },
         }
     }
 );
