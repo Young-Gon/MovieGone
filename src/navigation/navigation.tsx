@@ -1,9 +1,11 @@
 import { createStaticNavigation, StaticParamList } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useColorScheme } from "react-native";
+import { Text, TouchableOpacity, useColorScheme } from "react-native";
 import DetailScreen from "../screens/detail/Detail";
 import HomeScreen from "../screens/home/HomeScreen";
 import { DarkTheme, DefaultTheme } from "../theme/colors";
+import React from "react";
+import IornIcons from "@expo/vector-icons/Ionicons";
 
 const NativeStack = createNativeStackNavigator(
     {

@@ -2,7 +2,7 @@ import { StaticScreenProps, useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import { useEffect } from "react";
-import { ActivityIndicator, Dimensions, Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { ActivityIndicator, Dimensions, Image, Linking, ScrollView, Share, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import Column from "../../components/Column";
 import Row from "../../components/Row";
 import { MediaType, movieApi, tvApi } from "../../data/api";
@@ -50,8 +50,8 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
                 vote_average: 0,
                 vote_count: 0,
                 original_language: '',
-                videos : {
-                    results : []
+                videos: {
+                    results: []
                 }
             };
 
@@ -106,13 +106,27 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
             }
         }
     });
-
-
-    useEffect(() => {
-        navigation.setOptions({ title: params.type.toUpperCase() })
-    }, [navigation])
+    
 
     const data = details.data;
+
+    useEffect(() => {
+        navigation.setOptions({
+            title: params.type.toUpperCase(),
+            headerRight: () => {
+                console.log(params.type);
+                return <TouchableOpacity onPress={() => {
+                    if(data===undefined) return;
+                    const message = 'imdb_id' in data ? `https://www.imdb.com/title/${data.imdb_id}` : 'homepage' in data && data.homepage ? data.homepage : `https://www.google.com/search?q=${params.title}`
+                    Share.share({
+                        message: message,
+                        title: params.title,
+                        url: message
+                    })
+                }}><IornIcons name="share-outline" size={24} /></TouchableOpacity>
+            }
+        })
+    }, [navigation,data])
 
     if (!data) {
         return (
@@ -140,15 +154,15 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
                 </Column>
             </Row>
         </View>
-        <Text style={[style.text, {marginStart: 18, marginTop:18, fontSize: 24, fontWeight: '600'}]}>씨놉시스</Text>
+        <Text style={[style.text, { marginStart: 18, marginTop: 18, fontSize: 24, fontWeight: '600' }]}>씨놉시스</Text>
         <Text style={[style.text, { margin: 18, fontSize: 16 }]}>{data.overview}</Text>
         {'videos' in data ? data.videos.results.map((video) => {
             if (video.type === 'Trailer') {
-                return <TouchableOpacity key={video.id} style={{ flexDirection: 'row',margin: 18}} onPress={() => {
+                return <TouchableOpacity key={video.id} style={{ flexDirection: 'row', margin: 18 }} onPress={() => {
                     const youtubeUrl = `https://www.youtube.com/watch?v=${video.key}`;
                     Linking.openURL(youtubeUrl);
                 }}>
-                    <IornIcons name="logo-youtube" size={32}/>
+                    <IornIcons name="logo-youtube" size={32} />
                     <Text style={[style.text, { marginStart: 8, lineHeight: 24 }]}>{video.name}</Text>
                 </TouchableOpacity>
             }
