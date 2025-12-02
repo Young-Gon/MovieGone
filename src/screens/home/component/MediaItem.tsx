@@ -1,11 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Column from '../../../components/Column';
 import Row from '../../../components/Row';
+import { MediaType } from '../../../data/api';
 import { ThemeContext } from '../../../theme/colors';
 import Poster from './Poster';
-import { useNavigation } from '@react-navigation/native';
-import { MediaType } from '../../../data/api';
 
 interface MovieItemProps {
   id: number;
@@ -20,7 +20,7 @@ const MovieItem: React.FC<MovieItemProps> = (props) => {
   const colors = useContext(ThemeContext)
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=> navigation.navigate("Details",{itemId: props.id, type: props.media_type})}>
+    <TouchableOpacity onPress={()=> navigation.navigate("Details",{itemId: props.id, type: props.media_type, title: props.title})}>
       <Row style={{ marginHorizontal: 20 }}>
         <Poster url={props.poster_path} style={{ height: 120 }} />
         <Column style={{ marginHorizontal: 20, flex: 1 }}>

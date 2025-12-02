@@ -1,5 +1,6 @@
 import { Theme } from '@react-navigation/native';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useColorScheme } from 'react-native';
 
 export type Colors = {
   background: string;
@@ -32,7 +33,7 @@ export const DefaultTheme: Theme = {
     background: lightColors.background,
     card: 'rgb(255, 255, 255)',
     text: lightColors.text,
-    border: 'rgb(216, 216, 216)',
+    border: lightColors.text,
     notification: 'rgb(255, 59, 48)',
   },
   fonts: {
@@ -50,7 +51,7 @@ export const DarkTheme: Theme = {
     background: darkColors.background,
     card: 'rgb(18, 18, 18)',
     text: darkColors.text,
-    border: 'rgb(39, 39, 41)',
+    border: darkColors.text,
     notification: 'rgb(255, 69, 58)',
   },
   fonts: {
@@ -62,6 +63,13 @@ export const DarkTheme: Theme = {
 };
 
 export const ThemeContext = React.createContext<Colors>(darkColors);
+
+export const useThemedStyles = <T>(styleCenerator: (colors: Colors) => T) => {
+  const colorScheme = useColorScheme();
+  const colors = colorScheme === 'dark' ? darkColors : lightColors;
+  const styles = useMemo(() => styleCenerator(colors), [colorScheme, styleCenerator]);
+  return styles;
+}
 
 export default {
   light: lightColors,

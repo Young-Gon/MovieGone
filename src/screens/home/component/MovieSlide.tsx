@@ -1,12 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
-import { ColorSchemeName, Image, StyleSheet, Text, Touchable, TouchableOpacity, View, ViewProps } from "react-native";
+import { ColorSchemeName, Image, StyleSheet, Text, TouchableWithoutFeedback, View, ViewProps } from "react-native";
 import Column from "../../../components/Column";
 import Row from "../../../components/Row";
 import { Movie } from "../../../model/Movie";
 import { Colors } from "../../../theme/colors";
-import Poster from "./Poster";
 import { makeImgPath } from "../../../Utils";
-import { useNavigation } from "@react-navigation/native";
+import Poster from "./Poster";
 
 
 interface MovieSlideProps extends ViewProps {
@@ -17,11 +17,12 @@ interface MovieSlideProps extends ViewProps {
 
 export default function MovieSlide({ movie, scheme, colors, ...props }: MovieSlideProps) {
   const navigation = useNavigation();
+  console.log(movie);
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Details", { itemId: movie.id, type: 'movie' })}>
-      <View style={{ flex: 1 }} {...props}>
-        <Image source={{ uri: makeImgPath(movie.backdrop_path) }} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} />
-        <BlurView intensity={75} style={StyleSheet.absoluteFill} tint={scheme === 'dark' ? 'dark' : 'light'}>
+    <View style={{ flex: 1 }} {...props}>
+      <Image source={{ uri: makeImgPath(movie.backdrop_path) }} style={{ width: '100%', height: '100%', position: 'absolute' }} />
+      <BlurView intensity={75} blurReductionFactor={10} experimentalBlurMethod={'dimezisBlurView'} style={StyleSheet.absoluteFill} tint={scheme === 'dark' ? 'dark' : 'light'}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate("Details", { itemId: movie.id, type: 'movie', title: movie.title})}>
           <Row style={{ margin: 16 }} >
             <Poster url={movie.poster_path} style={{ height: '100%' }} />
             <Column style={{ marginLeft: 16 }}>
@@ -30,8 +31,8 @@ export default function MovieSlide({ movie, scheme, colors, ...props }: MovieSli
               <Text style={{ color: colors.text, marginTop: 8, width: '80%' }} numberOfLines={6}>{movie.overview}</Text>
             </Column>
           </Row>
-        </BlurView>
-      </View>
-    </TouchableOpacity>
+        </TouchableWithoutFeedback>
+      </BlurView>
+    </View>
   );
 }
