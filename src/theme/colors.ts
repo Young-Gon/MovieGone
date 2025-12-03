@@ -68,7 +68,7 @@ export const useThemedStyles = <T>(styleCenerator: (colors: Colors) => T) => {
   const colorScheme = useColorScheme();
   const colors = colorScheme === 'dark' ? darkColors : lightColors;
   const styles = useMemo(() => styleCenerator(colors), [colorScheme, styleCenerator]);
-  return styles;
+  return {styles, colors};
 }
 
 export default {

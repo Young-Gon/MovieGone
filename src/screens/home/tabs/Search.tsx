@@ -1,15 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingIndicator from "../../../components/LoadingIndicator";
 import { movieApi, tvApi } from "../../../data/api";
+import { ThemeContext } from "../../../theme/colors";
 import MediaItem from "../component/MediaItem";
 
 export default function Search() {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [resultState, setResultState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [movie, setMovie] = useState(true);
+    const colors = useContext(ThemeContext);
+
     const resultOfMovies = useMutation({
         mutationFn: (keyword: string) => movieApi.search(keyword),
     });
@@ -40,13 +43,14 @@ export default function Search() {
                         flexDirection: 'row',
                         marginTop: 10,
                         justifyContent: 'space-between',
-                        width: '80%',
+                        width: '100%',
+                         paddingHorizontal: 20
                     }}>
                         <TouchableOpacity onPress={() => setMovie(true)}>
-                            <Text style={{ ...styles.btnText, color: movie ? "white" : "grey" }}>Movies</Text>
+                            <Text style={{ ...styles.btnText, color: movie ? colors.text : "grey" }}>Movies</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setMovie(false)}>
-                            <Text style={{ ...styles.btnText, color: !movie ? "white" : "grey" }}>TVs</Text>
+                            <Text style={{ ...styles.btnText, color: !movie ? colors.text : "grey" }}>TVs</Text>
                         </TouchableOpacity>
                     </View>
                     {
@@ -101,7 +105,7 @@ export default function Search() {
 
     return <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
         <TextInput
-            style={{ backgroundColor: "white", borderColor: "gray", borderRadius: 18, width: "90%", padding: 10, margin: 10 }}
+            style={{ backgroundColor: colors.text, color: colors.background, borderColor: "gray", borderRadius: 18, width: "90%", padding: 10, margin: 10,marginTop: 20}}
             placeholder="Search for Movie or TV Show"
             placeholderTextColor="gray"
             returnKeyType="search"

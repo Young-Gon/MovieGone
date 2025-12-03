@@ -1,3 +1,4 @@
+import IornIcons from "@expo/vector-icons/Ionicons";
 import { StaticScreenProps, useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
@@ -11,7 +12,6 @@ import { TVDetail } from "../../model/TVDetail";
 import { Colors, useThemedStyles } from "../../theme/colors";
 import { makeImgPath } from "../../Utils";
 import Poster from "../home/component/Poster";
-import IornIcons from "@expo/vector-icons/Ionicons";
 
 type DetailProps = {
     title: string;
@@ -27,7 +27,7 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
     const SWIPER_HEIGHT = Dimensions.get('window').height / 4;
     const navigation = useNavigation();
     const scheme = useColorScheme();
-    const style = useThemedStyles(styleGenerator);
+    const { styles, colors } = useThemedStyles(styleGenerator);
 
     const details = useQuery<MovieDetail | TVDetail, Error>({
         queryKey: [params.type, params.itemId],
@@ -106,7 +106,7 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
             }
         }
     });
-    
+
 
     const data = details.data;
 
@@ -116,54 +116,54 @@ export default function DetailScreen({ route }: StaticScreenProps<DetailProps>) 
             headerRight: () => {
                 console.log(params.type);
                 return <TouchableOpacity onPress={() => {
-                    if(data===undefined) return;
+                    if (data === undefined) return;
                     const message = 'imdb_id' in data ? `https://www.imdb.com/title/${data.imdb_id}` : 'homepage' in data && data.homepage ? data.homepage : `https://www.google.com/search?q=${params.title}`
                     Share.share({
                         message: message,
                         title: params.title,
                         url: message
                     })
-                }}><IornIcons name="share-outline" size={24} /></TouchableOpacity>
+                }}><IornIcons name="share-outline" size={24} color={colors.text} /></TouchableOpacity>
             }
         })
-    }, [navigation,data])
+    }, [navigation, data])
 
     if (!data) {
         return (
-            <View style={style.loadingContainer}>
+            <View style={styles.loadingContainer}>
                 <ActivityIndicator />
             </View>
         );
     }
 
-    return <ScrollView style={style.container}>
+    return <ScrollView style={styles.container}>
         <View style={{ height: SWIPER_HEIGHT, marginTop: 10 }}>
             <Image source={{ uri: makeImgPath(data.backdrop_path) }} style={StyleSheet.absoluteFill} />
             <BlurView intensity={75} blurReductionFactor={10} experimentalBlurMethod={'dimezisBlurView'} style={StyleSheet.absoluteFill} tint={scheme === 'dark' ? 'dark' : 'light'}></BlurView>
             <Row style={{ margin: 16, }} >
                 <Poster
                     url={data.poster_path}
-                    style={{ height: '100%' }}
+                    style={{ height: '100%' }} 
                 />
                 <Column style={{ marginLeft: 16, justifyContent: 'flex-end' }}>
-                    <Text style={[style.text, { fontSize: 32, fontWeight: '600', width: '80%' }]}>{'title' in data ? data.title : data.name}</Text>
-                    <Text style={[style.text]}>{'production_companies' in data && data.production_companies.length > 0 ? `${data.production_companies[0].name} ${data.production_companies.length > 1 ? ` 외 ${data.production_companies.length - 1}개` : ''}` : null}</Text>
-                    <Text style={[style.text]}>{'genres' in data && data.genres.length > 0 ? data.genres.map((genre) => genre.name).join(', ') : null}</Text>
-                    {params.type === 'tv' ? <Text style={[style.text]}>{'seasons' in data ? data.seasons.length.toString() + ' Season' + (data.seasons.length > 1 ? 's' : '') : null}</Text> : null}
-                    <Text style={[style.text]}>{'release_date' in data ? data.release_date : data.first_air_date} ⭐ {data.vote_average.toFixed(1)}</Text>
+                    <Text style={[styles.text, { fontSize: 32, fontWeight: '600', width: '80%' }]} numberOfLines={2} adjustsFontSizeToFit={true} >{'title' in data ? data.title : data.name}</Text>
+                    <Text style={[styles.text]}>{'production_companies' in data && data.production_companies.length > 0 ? `${data.production_companies[0].name} ${data.production_companies.length > 1 ? ` 외 ${data.production_companies.length - 1}개` : ''}` : null}</Text>
+                    <Text style={[styles.text]}>{'genres' in data && data.genres.length > 0 ? data.genres.map((genre) => genre.name).join(', ') : null}</Text>
+                    {params.type === 'tv' ? <Text style={[styles.text]}>{'seasons' in data ? data.seasons.length.toString() + ' Season' + (data.seasons.length > 1 ? 's' : '') : null}</Text> : null}
+                    <Text style={[styles.text]}>{'release_date' in data ? data.release_date : data.first_air_date} ⭐ {data.vote_average.toFixed(1)}</Text>
                 </Column>
             </Row>
         </View>
-        <Text style={[style.text, { marginStart: 18, marginTop: 18, fontSize: 24, fontWeight: '600' }]}>씨놉시스</Text>
-        <Text style={[style.text, { margin: 18, fontSize: 16 }]}>{data.overview}</Text>
+        <Text style={[styles.text, { marginStart: 18, marginTop: 18, fontSize: 24, fontWeight: '600' }]}>씨놉시스</Text>
+        <Text style={[styles.text, { margin: 18, fontSize: 16 }]}>{data.overview}</Text>
         {'videos' in data ? data.videos.results.map((video) => {
             if (video.type === 'Trailer') {
                 return <TouchableOpacity key={video.id} style={{ flexDirection: 'row', margin: 18 }} onPress={() => {
                     const youtubeUrl = `https://www.youtube.com/watch?v=${video.key}`;
                     Linking.openURL(youtubeUrl);
                 }}>
-                    <IornIcons name="logo-youtube" size={32} />
-                    <Text style={[style.text, { marginStart: 8, lineHeight: 24 }]}>{video.name}</Text>
+                    <IornIcons name="logo-youtube" size={32} color={colors.text}/>
+                    <Text style={[styles.text, { marginStart: 8, lineHeight: 24 }]}>{video.name}</Text>
                 </TouchableOpacity>
             }
         }) : null}

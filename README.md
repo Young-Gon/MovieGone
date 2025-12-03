@@ -1,4 +1,8 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+[`@react-native-community/cli`](https://github.com/react-native-community/cli)를 기반으로 ['expo SDK'](https://docs.expo.dev/), [React-Navigation](https://reactnavigation.org/docs/getting-started), [React-Query](https://tanstack.com/query/v5/docs/framework/react/overview)를 활용하여 만든 [**React Native**](https://reactnative.dev)프로젝트입니다
+
+영화 정보를 소개하는 앱으로서, 기본적인 프로젝트 생성, 네비게이션, 레이아웃, 네트워크 통신을 활용하는 방법을 연구하기 위한 목적입니다
+
+![스크린샷](./screenshot/Screen_recording_20251203_102711.gif)
 
 # Getting Started
 
